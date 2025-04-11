@@ -9,7 +9,7 @@ from disease_modules.lung_cancer import show_lung_cancer_page
 from disease_modules.hypothyroid import show_thyroid_page
 
 # GitHub base URL for raw files
-GITHUB_BASE_URL = "https://raw.githubusercontent.com/Harshu0503/Medical-Diagnosis-Prediction-AI/main/"
+GITHUB_BASE_URL = "https://raw.githubusercontent.com/Harshu0503/Medical-Diagnosis-Prediction-AI/master/"
 
 # Set page config first
 st.set_page_config(page_title="AI Medical Diagnosis", page_icon="⚕️", layout="wide")
