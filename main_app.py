@@ -1,5 +1,6 @@
 import streamlit as st
-from models import load_models
+import requests
+import pickle
 from auth import authenticate
 from disease_modules.diabetes import show_diabetes_page
 from disease_modules.heart_disease import show_heart_page
@@ -7,13 +8,42 @@ from disease_modules.parkinsons import show_parkinsons_page
 from disease_modules.lung_cancer import show_lung_cancer_page
 from disease_modules.hypothyroid import show_thyroid_page
 
+# GitHub base URL for raw files
+GITHUB_BASE_URL = "https://raw.githubusercontent.com/Harshu0503/Medical-Diagnosis-Prediction-AI/main/"
+
 # Set page config first
 st.set_page_config(page_title="AI Medical Diagnosis", page_icon="⚕️", layout="wide")
 
-# Load CSS styling
+# Load CSS from GitHub
 def load_css():
-    with open("styles.css") as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    url = GITHUB_BASE_URL + "styles.css"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            st.markdown(f"<style>{response.text}</style>", unsafe_allow_html=True)
+        else:
+            st.warning("⚠️ Unable to load custom CSS.")
+    except Exception as e:
+        st.warning(f"⚠️ Error loading CSS: {e}")
+
+# Load models from GitHub
+def load_models():
+    model_files = {
+        "diabetes": "Models/diabetes_model.sav",
+        "heart": "Models/heart_disease_model.sav",
+        "parkinsons": "Models/parkinsons_model.sav",
+        "lung_cancer": "Models/lungs_disease_model.sav",
+        "thyroid": "Models/Thyroid_model.sav"
+    }
+    models = {}
+    for key, path in model_files.items():
+        url = GITHUB_BASE_URL + path
+        response = requests.get(url)
+        if response.status_code == 200:
+            models[key] = pickle.loads(response.content)
+        else:
+            raise Exception(f"Model '{key}' not found at {url}")
+    return models
 
 # Main function
 def main():
