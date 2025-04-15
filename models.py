@@ -1,23 +1,32 @@
 import pickle
+import requests
+import io
+
+def fetch_model_from_github(url):
+    """Fetch a .sav model file from a GitHub raw URL"""
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        return pickle.load(io.BytesIO(response.content))
+    except Exception as e:
+        print(f"Error loading model from {url}: {e}")
+        return None
 
 def load_models():
-    """Load all ML models with error handling"""
-    models = {
-        'diabetes': None,
-        'heart': None,
-        'parkinsons': None,
-        'lung_cancer': None,
-        'thyroid': None
+    """Load all ML models from GitHub with error handling"""
+    base_url = "https://raw.githubusercontent.com/Harshu0503/Medical-Diagnosis-Prediction-AI/281044719caabf5dabbec3667e81829efaa25aad/Models/"
+
+    model_files = {
+        'diabetes': 'diabetes_model.sav',
+        'heart': 'heart_disease_model.sav',
+        'parkinsons': 'parkinsons_model.sav',
+        'lung_cancer': 'lungs_disease_model.sav',
+        'thyroid': 'Thyroid_model.sav'
     }
 
-    try:
-        models['diabetes'] = pickle.load(open('H:/Harshu/Projects/Medical Disease Prediction/Models/diabetes_model.sav', 'rb'))
-        models['heart'] = pickle.load(open('H:/Harshu/Projects/Medical Disease Prediction/Models/heart_disease_model.sav', 'rb'))
-        models['parkinsons'] = pickle.load(open('H:/Harshu/Projects/Medical Disease Prediction/Models/parkinsons_model.sav', 'rb'))
-        models['lung_cancer'] = pickle.load(open('H:/Harshu/Projects/Medical Disease Prediction/Models/lungs_disease_model.sav', 'rb'))
-        models['thyroid'] = pickle.load(open('H:/Harshu/Projects/Medical Disease Prediction/Models/Thyroid_model.sav', 'rb'))
-    except Exception as e:
-        print(f"Model loading failed: {e}")
-        raise e  # Let the main app handle or crash with a clear error
+    models = {}
+    for key, filename in model_files.items():
+        full_url = base_url + filename
+        models[key] = fetch_model_from_github(full_url)
 
     return models
