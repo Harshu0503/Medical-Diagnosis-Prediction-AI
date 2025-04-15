@@ -88,6 +88,12 @@ def show_diabetes_page(model):
 
                     if prediction[0] == 1:
                         st.error("### High Risk of Diabetes Detected")
+                        # Add the alert to consult a doctor
+                        st.warning("""
+                        ⚠️ **Urgent Medical Attention Required**  
+                        Based on your test results, you are at high risk for diabetes.  
+                        Please consult a doctor immediately for proper diagnosis and treatment.
+                        """)
 
                         with st.expander("Diagnostic Details", expanded=True):
                             st.write("#### Key Risk Factors")
