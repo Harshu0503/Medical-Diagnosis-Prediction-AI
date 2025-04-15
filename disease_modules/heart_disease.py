@@ -88,6 +88,21 @@ def show_heart_page(model):
                     if prediction[0] == 1:
                         st.error("### High Risk of Heart Disease Detected")
                         
+                        # Doctor consultation alert
+                        st.markdown("""
+                        <div style="background-color: #fff4f4; border-left: 4px solid #ff5252; padding: 1rem; margin: 1rem 0;">
+                            <h4 style="color: #ff5252; margin-top: 0;">⚠️ Urgent Medical Attention Required</h4>
+                            <p>Based on your test results, <strong>immediate consultation with a cardiologist is strongly recommended</strong>.</p>
+                            <p>Please schedule an appointment with a heart specialist within the next 7 days for:</p>
+                            <ul>
+                                <li>Comprehensive cardiac evaluation</li>
+                                <li>Further diagnostic tests (ECG, stress test, echocardiogram)</li>
+                                <li>Personalized treatment plan</li>
+                            </ul>
+                            <p><strong>Emergency Warning:</strong> If experiencing chest pain, shortness of breath, or dizziness, seek emergency care immediately.</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
                         with st.expander("Cardiac Risk Analysis", expanded=True):
                             st.write("#### Critical Health Markers")
                             col1, col2 = st.columns(2)
@@ -113,6 +128,7 @@ def show_heart_page(model):
                             - Request ECG and stress test
                             - Begin heart-healthy diet immediately
                             - Monitor blood pressure daily
+                            - Avoid strenuous activity until medically cleared
                             """)
                     else:
                         st.success("### Low Risk of Heart Disease")
@@ -135,6 +151,7 @@ def show_heart_page(model):
                             - Mediterranean diet recommended
                             - 150 mins moderate exercise weekly
                             - Manage stress and sleep well
+                            - Regular cholesterol screening
                             """)
                 
                 except Exception as e:
