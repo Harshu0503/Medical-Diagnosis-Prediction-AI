@@ -7,6 +7,7 @@ from disease_modules.heart_disease import show_heart_page
 from disease_modules.parkinsons import show_parkinsons_page
 from disease_modules.lung_cancer import show_lung_cancer_page
 from disease_modules.hypothyroid import show_thyroid_page
+from disease_modules.covid19 import show_covid_page
 
 # GitHub base URL for raw files
 GITHUB_BASE_URL = "https://raw.githubusercontent.com/Harshu0503/Medical-Diagnosis-Prediction-AI/master/"
@@ -71,7 +72,8 @@ def main():
         "heart": "Heart Disease Prediction",
         "parkinsons": "Parkinson's Prediction",
         "lung-cancer": "Lung Cancer Prediction",
-        "thyroid": "Hypo-Thyroid Prediction"
+        "thyroid": "Hypo-Thyroid Prediction",
+        "covid": "COVID-19 Prediction"
     }
 
     # Get default selection from query param
@@ -102,6 +104,8 @@ def main():
         show_lung_cancer_page(models["lung_cancer"])
     elif disease == "Hypo-Thyroid Prediction":
         show_thyroid_page(models["thyroid"])
+    elif disease == "COVID-19 Prediction":
+        show_covid_page(models["covid"])
 
 if __name__ == "__main__":
     main()
