@@ -7,15 +7,14 @@ from disease_modules.heart_disease import show_heart_page
 from disease_modules.parkinsons import show_parkinsons_page
 from disease_modules.lung_cancer import show_lung_cancer_page
 from disease_modules.hypothyroid import show_thyroid_page
-from disease_modules.covid19 import show_covid_page
 
 # GitHub base URL for raw files
 GITHUB_BASE_URL = "https://raw.githubusercontent.com/Harshu0503/Medical-Diagnosis-Prediction-AI/master/"
 
-# Set page config first
+# Set page config
 st.set_page_config(page_title="AI Medical Diagnosis", page_icon="⚕️", layout="wide")
 
-# Load CSS from GitHub
+# Load custom CSS
 def load_css():
     url = GITHUB_BASE_URL + "styles.css"
     try:
@@ -34,7 +33,7 @@ def load_models():
         "heart": "Models/heart_disease_model.sav",
         "parkinsons": "Models/parkinsons_model.sav",
         "lung_cancer": "Models/lungs_disease_model.sav",
-        "thyroid": "Models/Thyroid_model.sav"
+        "thyroid": "Models/hypothyroid_rf_model.sav"
     }
     models = {}
     for key, path in model_files.items():
@@ -46,7 +45,7 @@ def load_models():
             raise Exception(f"Model '{key}' not found at {url}")
     return models
 
-# Main function
+# Main app function
 def main():
     load_css()
 
@@ -56,14 +55,14 @@ def main():
 
     st.title("🧠 AI Medical Diagnosis System")
 
-    # Load all models
+    # Load models
     try:
         models = load_models()
     except Exception as e:
         st.error(f"❌ Failed to load models: {e}")
         st.stop()
 
-    # Query params getter and setter
+    # Query params
     query = st.query_params
 
     # Disease options
@@ -72,15 +71,14 @@ def main():
         "heart": "Heart Disease Prediction",
         "parkinsons": "Parkinson's Prediction",
         "lung-cancer": "Lung Cancer Prediction",
-        "thyroid": "Hypo-Thyroid Prediction",
-        "covid": "COVID-19 Prediction"
+        "thyroid": "Hypo-Thyroid Prediction"
     }
 
-    # Get default selection from query param
+    # Get selection from query param
     selected_key = query.get("page", "diabetes")
     default_label = disease_options.get(selected_key, "Diabetes Prediction")
 
-    # Center the dropdown using columns
+    # Center the dropdown
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         disease = st.selectbox(
@@ -93,7 +91,7 @@ def main():
     selected_key = [k for k, v in disease_options.items() if v == disease][0]
     query.update(page=selected_key)
 
-    # Show selected disease module
+    # Show selected page
     if disease == "Diabetes Prediction":
         show_diabetes_page(models["diabetes"])
     elif disease == "Heart Disease Prediction":
@@ -104,8 +102,6 @@ def main():
         show_lung_cancer_page(models["lung_cancer"])
     elif disease == "Hypo-Thyroid Prediction":
         show_thyroid_page(models["thyroid"])
-    elif disease == "COVID-19 Prediction":
-        show_covid_page(models["covid"])
 
 if __name__ == "__main__":
     main()
