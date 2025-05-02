@@ -21,7 +21,8 @@ def load_models():
         'heart': 'heart_disease_model.sav',
         'parkinsons': 'parkinsons_model.sav',
         'lung_cancer': 'lungs_disease_model.sav',
-        'thyroid': 'Thyroid_model.sav'
+        'thyroid': 'hypothyroid_rf_model.sav',
+        'covid': 'covid19_prediction_model.sav'
     }
 
     models = {}
