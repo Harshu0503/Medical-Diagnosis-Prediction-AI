@@ -30,7 +30,7 @@ def load_models():
         'heart': 'heart_disease_model.sav',
         'parkinsons': 'parkinsons_model.sav',
         'lung_cancer': 'lungs_disease_model.sav',
-        'thyroid': 'hypothyroid_rf_model.sav'  # ✅ Correct path for thyroid model
+        'thyroid': 'hypothyroid_rf_model.sav'
     }
 
     models = {}
