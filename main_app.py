@@ -72,18 +72,30 @@ def main():
 
     # Show selected prediction module
     if selected_key == "diabetes":
-        show_diabetes_page(models["diabetes"])
+        if "diabetes" in models:
+            show_diabetes_page(models["diabetes"])
+        else:
+            st.error("❌ Diabetes Model not loaded. Please check model availability.")
     elif selected_key == "heart":
-        show_heart_page(models["heart"])
+        if "heart" in models:
+            show_heart_page(models["heart"])
+        else:
+            st.error("❌ Heart Model not loaded. Please check model availability.")
     elif selected_key == "parkinsons":
-        show_parkinsons_page(models["parkinsons"])
+        if "parkinsons" in models:
+            show_parkinsons_page(models["parkinsons"])
+        else:
+            st.error("❌ Parkinsons Model not loaded. Please check model availability.")
     elif selected_key == "lung_cancer":
-        show_lung_cancer_page(models["lung_cancer"])
-   elif selected_key == "thyroid":
-    if "thyroid" in models:
-        show_thyroid_page(models["thyroid"])
-    else:
-        st.error("❌ Thyroid model not loaded. Please check model availability.")
+        if "lung_cancer" in models:
+            show_lung_cancer_page(models["lung_cancer"])
+        else:
+            st.error("❌ Lung Cancer Model not loaded. Please check model availability.")
+    elif selected_key == "thyroid":
+        if "thyroid" in models:
+            show_thyroid_page(models["thyroid"])
+        else:
+            st.error("❌ Thyroid Model not loaded. Please check model availability.")
 
 # Run the app
 if __name__ == "__main__":
