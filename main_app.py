@@ -79,8 +79,11 @@ def main():
         show_parkinsons_page(models["parkinsons"])
     elif selected_key == "lung_cancer":
         show_lung_cancer_page(models["lung_cancer"])
-    elif selected_key == "thyroid":
+   elif selected_key == "thyroid":
+    if "thyroid" in models:
         show_thyroid_page(models["thyroid"])
+    else:
+        st.error("❌ Thyroid model not loaded. Please check model availability.")
 
 # Run the app
 if __name__ == "__main__":
