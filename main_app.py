@@ -6,7 +6,8 @@ from disease_modules.heart_disease import show_heart_page
 from disease_modules.parkinsons import show_parkinsons_page
 from disease_modules.lung_cancer import show_lung_cancer_page
 from disease_modules.hypothyroid import show_thyroid_page
-from models import load_models 
+from models import load_models  # ✅ Fixed import
+
 # GitHub base URL for raw files (for CSS only)
 GITHUB_BASE_URL = "https://raw.githubusercontent.com/Harshu0503/Medical-Diagnosis-Prediction-AI/master/"
 
@@ -52,8 +53,8 @@ def main():
     }
 
     # Read query params and get selected disease
-    query_params = st.experimental_get_query_params()
-    selected_key = query_params.get("page", ["diabetes"])[0]
+    query_params = st.query_params  # ✅ New usage
+    selected_key = query_params.get("page", "diabetes")
     default_label = disease_options.get(selected_key, "Diabetes Prediction")
 
     # Center dropdown
@@ -65,9 +66,9 @@ def main():
             index=list(disease_options.values()).index(default_label)
         )
 
-    # Get key for selected disease and update URL query param
+    # Get disease key from value
     selected_key = next(k for k, v in disease_options.items() if v == disease)
-    st.experimental_set_query_params(page=selected_key)
+    st.query_params.page = selected_key  # ✅ Update using new method
 
     # Show selected prediction module
     if selected_key == "diabetes":
