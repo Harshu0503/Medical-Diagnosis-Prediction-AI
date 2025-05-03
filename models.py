@@ -26,7 +26,7 @@ def load_models():
     Returns a dictionary of models.
     """
     # ✅ Raw GitHub URL to model files
-    base_url = "https://raw.githubusercontent.com/Harshu0503/Medical-Diagnosis-Prediction-AI/4c9c56746a8c50c719be38519f882c3bacb93cd1/Models/"
+    base_url = "https://raw.githubusercontent.com/Harshu0503/Medical-Diagnosis-Prediction-AI/master/Models/"
 
     model_files = {
         'diabetes': 'diabetes_model.sav',
