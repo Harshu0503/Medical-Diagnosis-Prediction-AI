@@ -7,15 +7,15 @@ from disease_modules.parkinsons import show_parkinsons_page
 from disease_modules.lung_cancer import show_lung_cancer_page
 from disease_modules.hypothyroid import show_thyroid_page
 from disease_modules.covid_prediction import show_covid_page
-from models import load_models  # ✅ Fixed import
+from models import load_models
 
-# GitHub base URL for raw files (for CSS only)
+# GitHub base URL for CSS
 GITHUB_BASE_URL = "https://raw.githubusercontent.com/Harshu0503/Medical-Diagnosis-Prediction-AI/master/"
 
-# Set Streamlit page configuration
+# Page config
 st.set_page_config(page_title="AI Medical Diagnosis", page_icon="⚕️", layout="wide")
 
-# Load and apply custom CSS from GitHub
+# Load custom CSS
 def load_css():
     url = GITHUB_BASE_URL + "styles.css"
     try:
@@ -27,15 +27,23 @@ def load_css():
     except Exception as e:
         st.warning(f"⚠️ Error loading CSS: {e}")
 
-# Main Streamlit app
 def main():
     load_css()
 
-    # Authenticate user
+    # Authentication
     if not authenticate():
         return
 
-    st.title("🧠 AI Medical Diagnosis System")
+    # Logout Button on top-right
+    col1, col2 = st.columns([5, 1])
+    with col2:
+        if st.button("Logout"):
+            st.session_state.clear()
+            st.session_state.logged_out = True
+            st.rerun()
+
+    # Centered title using HTML
+    st.markdown("<h1 style='text-align: center;'>🧠 AI Medical Diagnosis System</h1>", unsafe_allow_html=True)
 
     # Load models
     try:
@@ -44,7 +52,7 @@ def main():
         st.error(f"❌ Failed to load models: {e}")
         st.stop()
 
-    # Define available disease prediction options
+    # Disease options
     disease_options = {
         "diabetes": "Diabetes Prediction",
         "heart": "Heart Disease Prediction",
@@ -54,8 +62,8 @@ def main():
         "covid": "COVID-19 Prediction"
     }
 
-    # Read query params and get selected disease
-    query_params = st.query_params  # ✅ New usage
+    # Query param handling
+    query_params = st.query_params
     selected_key = query_params.get("page", "diabetes")
     default_label = disease_options.get(selected_key, "Diabetes Prediction")
 
@@ -68,42 +76,23 @@ def main():
             index=list(disease_options.values()).index(default_label)
         )
 
-    # Get disease key from value
+    # Update query param
     selected_key = next(k for k, v in disease_options.items() if v == disease)
-    st.query_params.page = selected_key  # ✅ Update using new method
+    st.query_params.page = selected_key
 
-    # Show selected prediction module
+    # Display selected page
     if selected_key == "diabetes":
-        if "diabetes" in models:
-            show_diabetes_page(models["diabetes"])
-        else:
-            st.error("❌ Diabetes Model not loaded. Please check model availability.")
+        show_diabetes_page(models["diabetes"])
     elif selected_key == "heart":
-        if "heart" in models:
-            show_heart_page(models["heart"])
-        else:
-            st.error("❌ Heart Model not loaded. Please check model availability.")
+        show_heart_page(models["heart"])
     elif selected_key == "parkinsons":
-        if "parkinsons" in models:
-            show_parkinsons_page(models["parkinsons"])
-        else:
-            st.error("❌ Parkinsons Model not loaded. Please check model availability.")
+        show_parkinsons_page(models["parkinsons"])
     elif selected_key == "lung_cancer":
-        if "lung_cancer" in models:
-            show_lung_cancer_page(models["lung_cancer"])
-        else:
-            st.error("❌ Lung Cancer Model not loaded. Please check model availability.")
+        show_lung_cancer_page(models["lung_cancer"])
     elif selected_key == "thyroid":
-        if "thyroid" in models:
-            show_thyroid_page(models["thyroid"])
-        else:
-            st.error("❌ Thyroid Model not loaded. Please check model availability.")
-    
-elif selected_key == "covid":
-        if "covid" in models:
-            show_thyroid_page(models["covid"])
-        else:
-            st.error("❌ Covid19 Model not loaded. Please check model availability.")
-# Run the app
+        show_thyroid_page(models["thyroid"])
+    elif selected_key == "covid":
+        show_covid_page(models["covid"])
+
 if __name__ == "__main__":
     main()
