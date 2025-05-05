@@ -35,7 +35,7 @@ def show_lung_cancer_page(model):
 
         if st.form_submit_button("Predict Lung Cancer Risk", type="primary"):
             if age == 0:
-                st.error("Age is required")
+                st.error("Age is required.")
                 st.markdown(
                     """<script>
                     document.querySelector('[aria-label="Age (years)"]').parentElement.parentElement.classList.add("invalid-field");
@@ -44,12 +44,11 @@ def show_lung_cancer_page(model):
                 )
             else:
                 try:
-                    # Prepare input data
                     input_data = [[
                         1 if gender == "Male" else 0,
                         age,
                         1 if smoking == "Yes" else 0,
-                        smoking_pack_years if smoking == "Yes" else 0,
+                        smoking_pack_years,
                         1 if yellow_fingers == "Yes" else 0,
                         1 if anxiety == "Yes" else 0,
                         1 if peer_pressure == "Yes" else 0,
@@ -71,7 +70,6 @@ def show_lung_cancer_page(model):
                     if prediction[0] == 1:
                         st.error("### High Risk of Lung Cancer Detected")
                         
-                        # Urgent consultation alert
                         st.markdown("""
                         <div style="background-color: #fff4f4; border-left: 4px solid #ff5252; padding: 1rem; margin: 1rem 0;">
                             <h4 style="color: #ff5252; margin-top: 0;">⚠️ Immediate Pulmonologist Consultation Recommended</h4>
@@ -93,19 +91,19 @@ def show_lung_cancer_page(model):
                             with col1:
                                 if smoking == "Yes":
                                     st.metric("Smoking Status", "Current Smoker", 
-                                             delta=f"{smoking_pack_years} pack-years" if smoking_pack_years > 0 else "Unknown pack-years",
-                                             help="1 pack-year = 1 pack/day for 1 year")
+                                              delta=f"{smoking_pack_years} pack-years" if smoking_pack_years > 0 else "Unknown",
+                                              help="1 pack-year = 1 pack/day for 1 year")
                                 st.metric("Chronic Symptoms", 
-                                         f"{sum([coughing=='Yes', breath=='Yes', chest_pain=='Yes'])}/3 present",
-                                         delta="High" if sum([coughing=='Yes', breath=='Yes', chest_pain=='Yes']) >= 2 else "Moderate")
+                                          f"{sum([coughing=='Yes', breath=='Yes', chest_pain=='Yes'])}/3 present",
+                                          delta="High" if sum([coughing=='Yes', breath=='Yes', chest_pain=='Yes']) >= 2 else "Moderate")
                             
                             with col2:
                                 st.metric("Age Risk", f"{age} years",
-                                         delta="High" if age > 55 else "Moderate",
-                                         help="Risk increases significantly after 55")
+                                          delta="High" if age > 55 else "Moderate",
+                                          help="Risk increases significantly after 55")
                                 st.metric("Family History", 
-                                         "Present" if family_history == "Yes" else "None",
-                                         delta="High" if family_history == "Yes" else "Low")
+                                          "Present" if family_history == "Yes" else "None",
+                                          delta="High" if family_history == "Yes" else "Low")
                             
                             st.warning("""
                             **Critical Next Steps:**
@@ -123,17 +121,17 @@ def show_lung_cancer_page(model):
                             
                             with col1:
                                 st.metric("Primary Risk Factors", 
-                                         f"{sum([smoking=='Yes', chronic_disease=='Yes', family_history=='Yes'])} present")
+                                          f"{sum([smoking=='Yes', chronic_disease=='Yes', family_history=='Yes'])} present")
                                 st.metric("Respiratory Symptoms", 
-                                         f"{sum([coughing=='Yes', breath=='Yes', wheezing=='Yes'])} present")
+                                          f"{sum([coughing=='Yes', breath=='Yes', wheezing=='Yes'])} present")
                             
                             with col2:
                                 st.metric("Prevention Status", 
-                                         "Needs Improvement" if smoking == "Yes" else "Good",
-                                         delta="Quit Smoking" if smoking == "Yes" else None)
+                                          "Needs Improvement" if smoking == "Yes" else "Good",
+                                          delta="Quit Smoking" if smoking == "Yes" else None)
                                 st.metric("Screening Recommended", 
-                                         "Annual CT after 55" if age >= 55 and (smoking == "Yes" or family_history == "Yes") 
-                                         else "Not currently")
+                                          "Annual CT after 55" if age >= 55 and (smoking == "Yes" or family_history == "Yes") 
+                                          else "Not currently")
                             
                             st.info("""
                             **Prevention Recommendations:**
@@ -144,11 +142,10 @@ def show_lung_cancer_page(model):
                             - Antioxidant-rich diet (berries, leafy greens)
                             """)
                     
-                    # General lung health information
                     st.markdown("""
                     <div style="background-color: #f0f7ff; border-left: 4px solid #4dabf7; padding: 1rem; margin: 1rem 0;">
                         <h4 style="color: #1971c2; margin-top: 0;">ℹ️ Lung Cancer Early Detection</h4>
-                        <p><strong>Screening Eligibility:</strong> Adults 50-80 with 20+ pack-year history who currently smoke or quit within past 15 years.</p>
+                        <p><strong>Screening Eligibility:</strong> Adults 50–80 with 20+ pack-year history who currently smoke or quit within past 15 years.</p>
                         <p><strong>Warning Signs:</strong> Persistent cough, chest pain, hoarseness, unexplained weight loss, coughing blood.</p>
                         <p><strong>Risk Reduction:</strong> Smoking cessation reduces risk by 50% after 10 years of quitting.</p>
                     </div>
