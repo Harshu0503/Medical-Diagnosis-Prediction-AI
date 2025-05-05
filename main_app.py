@@ -6,6 +6,7 @@ from disease_modules.heart_disease import show_heart_page
 from disease_modules.parkinsons import show_parkinsons_page
 from disease_modules.lung_cancer import show_lung_cancer_page
 from disease_modules.hypothyroid import show_thyroid_page
+from disease_modules.covid_prediction import show_covid_page
 from models import load_models  # ✅ Fixed import
 
 # GitHub base URL for raw files (for CSS only)
@@ -49,7 +50,8 @@ def main():
         "heart": "Heart Disease Prediction",
         "parkinsons": "Parkinson's Prediction",
         "lung_cancer": "Lung Cancer Prediction",
-        "thyroid": "Hypo-Thyroid Prediction"
+        "thyroid": "Hypo-Thyroid Prediction",
+        "covid": "COVID-19 Prediction"
     }
 
     # Read query params and get selected disease
@@ -96,7 +98,12 @@ def main():
             show_thyroid_page(models["thyroid"])
         else:
             st.error("❌ Thyroid Model not loaded. Please check model availability.")
-
+    
+elif selected_key == "covid":
+        if "covid" in models:
+            show_thyroid_page(models["covid"])
+        else:
+            st.error("❌ Covid19 Model not loaded. Please check model availability.")
 # Run the app
 if __name__ == "__main__":
     main()
