@@ -5,7 +5,7 @@ def authenticate():
         st.session_state.authenticated = False
     
     if not st.session_state.authenticated:
-        st.title("Login")
+        st.title("🔐 Login")
         
         col1, col2 = st.columns([1, 2])
         with col2:
