@@ -3,11 +3,11 @@ import requests
 from auth import authenticate
 from disease_modules.diabetes import show_diabetes_page
 from disease_modules.heart_disease import show_heart_page
-from disease_modules.parkinsons import show_parkinsons_page
 from disease_modules.lung_cancer import show_lung_cancer_page
 from disease_modules.hypothyroid import show_thyroid_page
 from disease_modules.covid_prediction import show_covid_page
 from models import load_models
+import time
 
 # GitHub base URL for CSS
 GITHUB_BASE_URL = "https://raw.githubusercontent.com/Harshu0503/Medical-Diagnosis-Prediction-AI/master/"
@@ -15,17 +15,32 @@ GITHUB_BASE_URL = "https://raw.githubusercontent.com/Harshu0503/Medical-Diagnosi
 # Page config
 st.set_page_config(page_title="AI Medical Diagnosis", page_icon="⚕️", layout="wide")
 
-# Load custom CSS
+# Custom CSS for larger font sizes
 def load_css():
+    css = f"""
+    <style>
+        /* Loading message style */
+        .loading-message {{
+            font-size: 15px !important;
+            font-weight: bold !important;
+        }}
+        /* Success message style */
+        .success-message {{
+            font-size: 15px !important;
+            font-weight: bold !important;
+        }}
+    </style>
+    """
+    st.markdown(css, unsafe_allow_html=True)
+    
+    # Also load the original CSS from GitHub
     url = GITHUB_BASE_URL + "styles.css"
     try:
         response = requests.get(url)
         if response.status_code == 200:
             st.markdown(f"<style>{response.text}</style>", unsafe_allow_html=True)
-        else:
-            st.warning("⚠️ Unable to load custom CSS.")
-    except Exception as e:
-        st.warning(f"⚠️ Error loading CSS: {e}")
+    except Exception:
+        pass
 
 def main():
     load_css()
@@ -43,20 +58,36 @@ def main():
             st.rerun()
 
     # Centered title using HTML
-    st.markdown("<h1 style='text-align: center;'>🧠 AI Medical Diagnosis System</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; font-size: 2.5rem;'>🧠 AI Medical Diagnosis System</h1>", unsafe_allow_html=True)
 
-    # Load models
-    try:
-        models = load_models()
-    except Exception as e:
-        st.error(f"❌ Failed to load models: {e}")
-        st.stop()
+    # Show loading spinner with larger text
+    with st.spinner(''):
+        loading_message = st.markdown(
+            "<div class='loading-message'>🔍 Loading AI models... Please wait...</div>", 
+            unsafe_allow_html=True
+        )
+        
+        # Load models
+        try:
+            models = load_models()
+            time.sleep(0.5)  # Small delay to ensure spinner is visible
+        except Exception as e:
+            st.error(f"❌ Failed to load models: {e}")
+            st.stop()
+        
+        # Remove loading message
+        loading_message.empty()
+
+    # Show success message with larger text
+    st.markdown(
+        "<div class='success-message'>✅ Models loaded successfully!</div>", 
+        unsafe_allow_html=True
+    )
 
     # Disease options
     disease_options = {
         "diabetes": "Diabetes Prediction",
         "heart": "Heart Disease Prediction",
-        "parkinsons": "Parkinson's Prediction",
         "lung_cancer": "Lung Cancer Prediction",
         "thyroid": "Hypo-Thyroid Prediction",
         "covid": "COVID-19 Prediction"
@@ -85,8 +116,6 @@ def main():
         show_diabetes_page(models["diabetes"])
     elif selected_key == "heart":
         show_heart_page(models["heart"])
-    elif selected_key == "parkinsons":
-        show_parkinsons_page(models["parkinsons"])
     elif selected_key == "lung_cancer":
         show_lung_cancer_page(models["lung_cancer"])
     elif selected_key == "thyroid":
