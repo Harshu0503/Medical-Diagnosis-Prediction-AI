@@ -70,6 +70,18 @@ def authenticate():
         .tab-content {
             padding: 20px 0;
         }
+        .stAlert {
+            animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
+            animation-fill-mode: forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
     </style>
     """, unsafe_allow_html=True)
 
@@ -131,16 +143,28 @@ def authenticate():
                         }
                         save_users(users)
                         st.session_state.just_registered = True
-                        st.success("🎉 Registration successful! Please log in using your new credentials.")
-                        # Auto-scroll to login tab
+                        
+                        # Show success message that will auto-close
+                        success_placeholder = st.empty()
+                        success_placeholder.success("🎉 Registration successful! Please log in using your new credentials.")
+                        
+                        # Auto-scroll to login tab after 1 second
                         html("""
                         <script>
-                            window.addEventListener('load', function() {
+                            setTimeout(function() {
                                 const tabs = window.parent.document.querySelectorAll('[role="tab"]');
                                 if (tabs && tabs.length > 0) {
                                     tabs[0].click();
                                 }
-                            });
+                                
+                                // Remove the success message after 3 seconds
+                                setTimeout(function() {
+                                    var alerts = window.parent.document.querySelectorAll('.stAlert');
+                                    if (alerts && alerts.length > 0) {
+                                        alerts[0].style.display = 'none';
+                                    }
+                                }, 3000);
+                            }, 1000);
                         </script>
                         """)
                         st.rerun()
@@ -152,3 +176,13 @@ def authenticate():
             st.session_state.just_registered = False
 
     return False
+
+
+# Example usage in your app
+if __name__ == "__main__":
+    if authenticate():
+        st.title("Welcome to Medical Diagnosis System")
+        st.write(f"Hello, {st.session_state.username}!")
+        st.button("Logout", on_click=lambda: st.session_state.update({"authenticated": False, "username": None}))
+    else:
+        st.write("Please authenticate to access the system.")
