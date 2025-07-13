@@ -27,9 +27,15 @@ def save_users(users):
         st.error(f"Error saving user data: {e}")
 
 def authenticate():
+    # Initial session state setup
     if "authenticated" not in st.session_state:
         st.session_state.authenticated = False
         st.session_state.username = None
+        st.session_state.just_registered = False
+
+    # Show post-registration message
+    if st.session_state.just_registered:
+        st.success("✅ Registration successful! Please log in.")
         st.session_state.just_registered = False
 
     if st.session_state.authenticated:
@@ -57,11 +63,10 @@ def authenticate():
                     elif username in users and users[username]["password"] == password:
                         st.session_state.authenticated = True
                         st.session_state.username = username
-                        st.success(f"Welcome back, {users[username]['name']}!")
+                        st.success(f"✅ Welcome back, {users[username]['name']}!")
                         st.rerun()
-
                     else:
-                        st.error("Invalid credentials.")
+                        st.error("❌ Invalid credentials.")
 
         with col2:
             st.markdown("### Welcome back!")
@@ -93,16 +98,15 @@ def authenticate():
                     else:
                         users[new_username] = {
                             "name": full_name,
-                            "password": new_password  # Use hashed passwords in production
+                            "password": new_password  # In production, hash this!
                         }
                         save_users(users)
-                        st.success("Registration successful! Please log in.")
-                        st.session_state.just_registered = True
+                        st.session_state.just_registered = True  # Message will show next render
                         st.rerun()
-
 
     return False
 
+# For standalone testing
 if __name__ == "__main__":
     st.set_page_config(page_title="Medical Diagnosis Login", layout="centered")
 
@@ -113,4 +117,3 @@ if __name__ == "__main__":
             st.session_state.authenticated = False
             st.session_state.username = None
             st.rerun()
-
